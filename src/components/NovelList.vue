@@ -16,6 +16,13 @@ const props = defineProps({
 const emit = defineEmits(["handleDelete"]);
 
 const selectedNovels = ref(new Set());
+const isEdit = ref(false);
+
+const isBookmarkType = props.type === "bookmark";
+const isTopNovelType = props.type === "top_novel";
+
+const selectedCount = computed(() => selectedNovels.value.size);
+const hasSelectedNovels = computed(() => selectedCount.value > 0);
 
 const toggleSelection = (novelIndex) => {
   if (selectedNovels.value.has(novelIndex)) {
@@ -27,7 +34,6 @@ const toggleSelection = (novelIndex) => {
 
 const isSelected = (index) => selectedNovels.value.has(index);
 
-const isEdit = ref(false);
 const toggleIsEdit = () => {
   isEdit.value = !isEdit.value;
   if (!isEdit.value) {
@@ -40,45 +46,49 @@ const handleDelete = () => {
   selectedNovels.value.clear();
   isEdit.value = false;
 };
+
+const getCrownColor = (index) => {
+  const colors = ["text-[#ffc900]", "text-gray-600", "text-[#B87333]"];
+  return index < 3 ? colors[index] : "hidden";
+};
 </script>
 
 <template>
   <div class="max-w-[1080px] mx-auto">
-    <div class="flex items-center justify-between" v-if="type == 'bookmark'">
+    <div v-if="isBookmarkType" class="flex items-center justify-between">
       <div class="flex items-center gap-4">
         <p class="text-xs">จำนวนทั้งหมด {{ novels?.length }} รายการ</p>
-        <p v-if="selectedNovels.size > 0" class="text-xs text-orange-700">
-          เลือกแล้ว {{ selectedNovels.size }} รายการ
+        <p v-if="hasSelectedNovels" class="text-xs text-orange-700">
+          เลือกแล้ว {{ selectedCount }} รายการ
         </p>
       </div>
       <div class="flex items-center gap-2">
         <button
           @click="toggleIsEdit"
           class="btn"
-          :class="!isEdit ? 'btn-warning' : ''"
+          :class="{ 'btn-warning': !isEdit }"
         >
-          {{ !isEdit ? "แก้ไข" : "ยกเลิก" }}
+          {{ isEdit ? "ยกเลิก" : "แก้ไข" }}
         </button>
         <button
-          :disabled="selectedNovels.size == 0"
           v-if="isEdit"
+          :disabled="!hasSelectedNovels"
           class="btn flex items-center gap-1"
           @click="handleDelete"
         >
           <Icon icon="tabler:trash" width="24" height="24" />
-          <p v-if="selectedNovels.size != 0">
-            {{ selectedNovels.size }}
-          </p>
+          <span v-if="hasSelectedNovels">{{ selectedCount }}</span>
         </button>
       </div>
     </div>
+
     <div
       class="mt-4 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-4 max-w-[1080px] mx-auto"
     >
       <div v-for="(novel, index) in novels" :key="index" class="novel-item">
         <div class="flex items-center justify-between relative">
           <div
-            v-if="type == 'bookmark' && isEdit"
+            v-if="isBookmarkType && isEdit"
             class="absolute -right-1 md:-left-8 top-1 md:top-3 z-10 cursor-pointer"
             @click="toggleSelection(index)"
           >
@@ -96,79 +106,63 @@ const handleDelete = () => {
 
           <div
             class="flex md:items-start gap-4 w-full"
-            :class="type == 'top_novel' ? 'items-center' : 'items-start'"
+            :class="isTopNovelType ? 'items-center' : 'items-start'"
           >
             <div
-              v-if="type == 'top_novel'"
+              v-if="isTopNovelType"
               class="flex flex-col items-center font-bold min-w-8 md:hidden"
             >
               <Icon
                 icon="material-symbols:crown"
                 class="w-5 h-5 md:h-7 md:w-7"
-                :class="
-                  index == 0
-                    ? 'text-[#ffc900]'
-                    : index == 1
-                    ? 'text-gray-600'
-                    : index == 2
-                    ? 'text-[#B87333]'
-                    : 'hidden'
-                "
+                :class="getCrownColor(index)"
               />
               <p class="text-orange-500">{{ index + 1 }}</p>
             </div>
+
             <img
               :src="novel.image_url"
               class="w-[100px] h-[150px] rounded-2xl md:block object-cover"
-              :class="type == 'top_novel' && 'hidden'"
-              alt=""
+              :class="{ hidden: isTopNovelType }"
+              :alt="novel.title"
             />
+
             <div class="flex flex-col flex-1 justify-center">
               <div class="hidden md:flex justify-between items-center">
-                <div v-if="type == 'top_novel'" class="flex items-center badge">
+                <div v-if="isTopNovelType" class="flex items-center badge">
                   <Icon
                     icon="material-symbols:crown"
                     class="w-4 h-4"
-                    :class="
-                      index == 0
-                        ? 'text-[#ffc900]'
-                        : index == 1
-                        ? 'text-gray-600'
-                        : index == 2
-                        ? 'text-[#B87333]'
-                        : 'hidden'
-                    "
+                    :class="getCrownColor(index)"
                   />
                   <p class="text-xs text-orange-500">{{ index + 1 }}</p>
                 </div>
               </div>
+
               <p class="text-xs md:mt-2 text-gray-400">{{ novel.genre }}</p>
 
               <p
                 class="font-semibold md:line-clamp-2 text-lg"
-                :class="type == 'top_novel' ? 'line-clamp-1' : 'line-clamp-2'"
+                :class="isTopNovelType ? 'line-clamp-1' : 'line-clamp-2'"
               >
                 {{ novel.title }}
               </p>
+
               <div
                 class="flex md:flex-col-reverse md:items-start gap-1 items-center text-gray-600"
               >
                 <div
-                  v-if="type == 'top_novel'"
+                  v-if="isTopNovelType"
                   class="flex items-center gap-1 md:absolute md:bottom-0"
                 >
                   <Icon icon="mdi:eye" class="w-3 h-3" />
                   <p class="text-xs">144.92k</p>
                 </div>
-
-                <span v-if="type == 'top_novel'" class="md:hidden">·</span>
-
+                <span v-if="isTopNovelType" class="md:hidden">·</span>
                 <p class="text-xs">{{ novel.author }}</p>
               </div>
-              <div
-                class="absolute bottom-0 opacity-50"
-                v-if="type != 'top_novel'"
-              >
+
+              <div v-if="isBookmarkType" class="absolute bottom-0 opacity-50">
                 <div class="flex items-center text-xs">
                   <Icon
                     icon="material-symbols:list-rounded"
@@ -187,7 +181,8 @@ const handleDelete = () => {
                 </div>
               </div>
             </div>
-            <div v-if="type == 'top_novel'" class="group cursor-pointer">
+
+            <div v-if="isTopNovelType" class="group cursor-pointer">
               <Icon
                 icon="material-symbols-light:bookmark-outline"
                 class="w-6 h-6"
@@ -201,11 +196,9 @@ const handleDelete = () => {
         </div>
       </div>
     </div>
-  </div>
 
-  <div v-if="novels?.length === 0" class="text-center py-8 text-gray-500">
-    <p>ไม่มีนิยายในรายการ</p>
+    <div v-if="novels?.length === 0" class="text-center py-8 text-gray-500">
+      <p>ไม่มีนิยายในรายการ</p>
+    </div>
   </div>
 </template>
-
-<style scoped></style>
