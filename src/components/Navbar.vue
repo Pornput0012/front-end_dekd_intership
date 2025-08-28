@@ -5,9 +5,11 @@
     <div class="flex-1">
       <router-link
         :to="{ name: 'home' }"
-        class="font-semibold text-xl ml-4 text-orange-600"
-        >Dek-Dok</router-link
+        class="font-semibold text-xl ml-4 text-orange-600 flex items-center  gap-2"
       >
+        <img src="/logo.png" class="w-8 h-8 md:w-10 md:h-10" alt="" />
+        Dek-D
+      </router-link>
     </div>
     <div class="flex-none">
       <ul class="menu menu-horizontal items-center px-1">
