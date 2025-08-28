@@ -1,29 +1,52 @@
-# dekd-fe-task
+# 📚 Dek-D Internship รอบมกราคม 2569
+🔗 **Demo:** [https://dek-dpornput.vercel.app/](https://dek-dpornput.vercel.app/)
 
-This template should help get you started developing with Vue 3 in Vite.
+---
 
-## Recommended IDE Setup
+## ✨ Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- 📌 จัดการรายการนิยายคั่น (Create / Edit / Delete)  
+- 🎉 Section โปรโมต **แบนเนอร์นิยายมาใหม่**  
+- 📱 **Responsive Design** รองรับ Desktop / Mobile  
+- ⚡ พัฒนาโดยใช้ **VueJS + TailwindCSS + DaisyUI**  
 
-## Customize configuration
+---
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+## 📖 Acceptance Criteria
 
-## Project Setup
+1. ผู้ใช้งานสามารถสร้าง / แก้ไข / ลบ รายการนิยายที่คั่นไว้ได้  
+2. แสดง Section **แบนเนอร์นิยายมาใหม่**  
+3. รองรับการแสดงผลบน **Web Responsive**  
+4. ใช้ **VueJS (รองรับ NuxtJS)** และ **TailwindCSS + DaisyUI**  
 
-```sh
-npm install
-```
+---
 
-### Compile and Hot-Reload for Development
+## 🌐 Compatibility
 
-```sh
-npm run dev
-```
+- 💻 **Desktop Browsers**  
+- 📱 **Mobile Browsers**
 
-### Compile and Minify for Production
+---
 
-```sh
-npm run build
-```
+## 🚀 Tech Stack
+
+- [Vue 3](https://vuejs.org/)  
+- [Tailwind CSS](https://tailwindcss.com/)  
+- [DaisyUI](https://daisyui.com/)  
+
+---
+
+## 📦 Installation & Usage
+
+```bash
+# 1. Clone this repository
+git clone https://github.com/your-repo/novel-bookmark-app.git
+
+# 2. Navigate to the project folder
+cd novel-bookmark-app
+
+# 3. Install dependencies
+npm install   # หรือ yarn install
+
+# 4. Run development server
+npm run dev   # หรือ yarn dev
